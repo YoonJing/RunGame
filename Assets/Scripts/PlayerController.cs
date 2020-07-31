@@ -18,31 +18,31 @@ public class PlayerController : MonoBehaviour
         playerRigidbody = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         playerAudio = GetComponent<AudioSource>();
-        }
+
    
         // 초기화
     }
 
     private void Update()
-{
-    if (isDead)
     {
-        return;
-    }
-    if (Input.GetMouseButtonDown(0) && jumpCount < 2)
-    {
-        jumpCount++;
-        playerRigidbody.velocity = Vector2.zero;
-        playerRigidbody.AddForce(new Vector2(0, jumpForce));
-        playerAudio.Play();
-    }
-    else if(Input.GetMouseButtonUp(0) && playerRigidbody.veloctiy.y > 0)
-    {
-        playerRigidbody.velocity = playerRigidbody.velocity * 0.5f;
-    }
-    animator.SetBool("Grounded", isGrounded);
+        if (isDead)
+        {
+            return;
+        }
+        if (Input.GetMouseButtonDown(0) && jumpCount < 2)
+        {
+            jumpCount++;
+            playerRigidbody.velocity = Vector2.zero;
+            playerRigidbody.AddForce(new Vector2(0, jumpForce));
+            playerAudio.Play();
+        }
+        else if(Input.GetMouseButtonUp(0) && playerRigidbody.velocity.y > 0)
+        {
+            playerRigidbody.velocity = playerRigidbody.velocity * 0.5f;
+        }
+        animator.SetBool("Grounded", isGrounded);
 
-}
+    }
 
 
 
@@ -51,8 +51,9 @@ public class PlayerController : MonoBehaviour
     animator.SetTrigger("Die");
     playerAudio.clip = deathClip;
     playerAudio.Play();
-    platerRigidbody.velocity = Vector2.zero;
+    playerRigidbody.velocity = Vector2.zero;
     isDead = true;
+    GameManager.instance.OnPlayerDead();
         // 사망 처리
     }
 
@@ -80,4 +81,5 @@ public class PlayerController : MonoBehaviour
     {
     isGrounded = false;     // 바닥에서 벗어났음을 감지하는 처리
     }
+
 }
